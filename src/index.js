@@ -16,9 +16,9 @@ export class VirtualRecycler {
     this.currentStartIndex = 0;
     this.domPool = [];
 
-    if (!Index._styleInjected) {
+    if (!VirtualRecycler._styleInjected) {
       this.injectStyles();
-      Index._styleInjected = true;
+      VirtualRecycler._styleInjected = true;
     }
 
     container.classList.add(this.containerClass);
