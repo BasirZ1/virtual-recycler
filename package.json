@@ -1,0 +1,16 @@
+{
+  "name": "virtual-recycler",
+  "version": "1.0.0",
+  "description": "A virtual scrolling library for large lists.",
+  "main": "src/index.js",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src/"
+  ],
+  "keywords": ["virtual", "recycler", "list", "scrolling"],
+  "author": "Abdul Basir Zurmati",
+  "license": "MIT"
+}
