@@ -43,7 +43,7 @@ yarn add virtual-recycler
 ```
 
 ```js
-import { VirtualRecycler } from './VirtualRecycler.js';
+import { VirtualRecycler } from 'virtual-recycler';
 
 const data = Array.from({ length: 10000 }, (_, i) => ({
   sku: `SKU-${1000 + i}`,
@@ -53,6 +53,7 @@ const data = Array.from({ length: 10000 }, (_, i) => ({
 
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById('recycler');
+  container.classList.add('recycler-container');
 
   new VirtualRecycler({
     container,
