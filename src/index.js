@@ -1,25 +1,26 @@
 export class VirtualRecycler {
-  static _styleInjected = false;
-
-  constructor({container, data, itemHeight, visibleCount, render, containerClass = "recycler-container",
+  constructor({container, data, itemHeight, itemMarginInPx, visibleCount, render, containerClass = "recycler-container",
   itemClass = "recycler-item"}) {
     this.containerClass = containerClass;
     this.itemClass = itemClass;
 
     this.container = container;
     this.data = data;
-    this.itemHeight = itemHeight;
     this.visibleCount = visibleCount;
     this.render = render;
-
+    if (itemHeight === "auto") {
+      const sample = document.createElement("div");
+      sample.style.visibility = "hidden";
+      this.render(sample, this.data[0], 0);
+      document.body.appendChild(sample);
+      this.itemHeight = sample.offsetHeight + itemMarginInPx;
+      sample.remove();
+    } else {
+      this.itemHeight = itemHeight + itemMarginInPx;
+    }
     this.totalItems = data.length;
     this.currentStartIndex = 0;
     this.domPool = [];
-
-    if (!VirtualRecycler._styleInjected) {
-      this.injectStyles();
-      VirtualRecycler._styleInjected = true;
-    }
 
     container.classList.add(this.containerClass);
 
@@ -57,7 +58,7 @@ export class VirtualRecycler {
   }
 
   _attachScrollHandler() {
-    this.container.addEventListener("scroll", () => {
+    this._boundScrollHandler = () => {
       const scrollTop = this.container.scrollTop;
       const startIndex = Math.floor(scrollTop / this.itemHeight);
 
@@ -65,8 +66,11 @@ export class VirtualRecycler {
         this._renderVisibleItems(startIndex);
         this.currentStartIndex = startIndex;
       }
-    });
+    };
+
+    this.container.addEventListener("scroll", this._boundScrollHandler);
   }
+
 
   _renderVisibleItems(startIndex) {
     for (let i = 0; i < this.visibleCount; i++) {
@@ -91,26 +95,31 @@ export class VirtualRecycler {
     this._renderVisibleItems(this.currentStartIndex);
   }
 
-  injectStyles() {
-    const style = document.createElement("style");
-    style.textContent = `
-      .${this.containerClass} {
-        height: 100%;
-        overflow-y: auto;
-        position: relative;
-      }
-      .${this.itemClass} {
-        position: absolute;
-        left: 0;
-        right: 0;
-        box-sizing: border-box;
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid #eee;
-        background: #fff;
-        font-family: sans-serif;
-      }
-    `;
-    document.head.appendChild(style);
+  destroy() {
+    // Remove scroll listener
+    if (this._boundScrollHandler) {
+      this.container.removeEventListener("scroll", this._boundScrollHandler);
+    }
+
+    // Clear DOM elements from container
+    if (this.poolWrapper) {
+      this.poolWrapper.remove();
+    }
+
+    if (this.spacer) {
+      this.spacer.remove();
+    }
+
+    // Null all internal references to help GC
+    this.domPool.forEach(el => {
+      el.remove(); // remove from DOM
+    });
+    this.domPool = [];
+
+    this.poolWrapper = null;
+    this.spacer = null;
+    this.container = null;
+    this.data = [];
+    this.render = null;
   }
 }
-
