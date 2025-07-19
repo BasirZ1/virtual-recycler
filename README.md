@@ -58,8 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
   new VirtualRecycler({
     container,
     data,
-    itemHeight: 100,
-    itemMarginInPx: 5,
     visibleCount: 12,
     render: (el, item, index) => {
       el.innerHTML = `
@@ -78,16 +76,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 ## ⚙️ API
 
-| Option           | Type              | Required | Description                                                                             |
-|------------------|-------------------|----------|-----------------------------------------------------------------------------------------|
-| `container`      | `HTMLElement`     | ✅        | Scrollable container element                                                            |
-| `data`           | `Array`           | ✅        | Your dataset                                                                            |
-| `itemHeight`     | `number` `String` | ✅        | Fixed height of each item in px or<br/> "auto" for automatic cal based on one mock item |
-| `itemMarginInPx` | `number`          | ✅        | margin-bottom added for each item                                                       |
-| `visibleCount`   | `number`          | ✅        | Max DOM elements to keep in pool                                                        |
-| `render`         | `(el, item, i)`   | ✅        | Function to populate or update item content                                             |
-| `containerClass` | `String`          | ✅        | Custom class for styling recycler-container                                             |
-| `itemClass`      | `String`          | ✅        | Custom class for styling recycler items                                                 |
+| Option           | Type                | Required                     | Description                                                                            |
+|------------------|---------------------|------------------------------|----------------------------------------------------------------------------------------|
+| `container`      | `HTMLElement`       | ✅                            | Scrollable container element                                                           |
+| `data`           | `Array`             | ✅                            | Your dataset                                                                           |
+| `itemHeight`     | `number` `String`   | default auto                 | Fixed height of each item in px or<br/> "auto" for automatic cal "auto" is the default |
+| `itemMarginInPx` | `number`            | ✅                            | margin-bottom added for each item. default zero not needed for most implementations.   |
+| `visibleCount`   | `number`            | ✅                            | Max DOM elements to keep in pool                                                       |
+| `render`         | `(el, item, i)`     | ✅                            | Function to populate or update item content                                            |
+| `containerClass` | `String`            | default 'recycler-container' | Custom class for styling recycler-container                                            |
+| `itemClass`      | `String`            | default 'recycler-item'      | Custom class for styling recycler items                                                |
 
 ---
 
@@ -100,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
 ## 🛠️ Advanced
 
 * ✅ `updateData(newData)` — replace data and re-render
+* ✅ `removeItem(indexToRemove)` — remove an item from the list using index.
 * ✅ `destroy()` — to destroy VirtualRecycler instance and avoid memory leak.
 * ⚙️ Extend to support:
 
